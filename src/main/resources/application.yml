@@ -8,4 +8,6 @@ spring:
     name: user-center
 server:
   port: 8080
-
+mybatis-plus:
+  configuration:
+    map-underscore-to-camel-case: false
