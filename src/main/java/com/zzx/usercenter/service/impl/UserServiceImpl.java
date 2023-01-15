@@ -5,7 +5,6 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.zzx.usercenter.mapper.UserMapper;
 import com.zzx.usercenter.model.domain.User;
 import com.zzx.usercenter.service.UserService;
-import lombok.extern.java.Log;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
@@ -16,6 +15,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import static com.zzx.usercenter.constant.UserConstant.USER_LOGIN_STATE;
 
 /**
  * @author zzx
@@ -32,10 +33,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
      * 盐值，混淆密码
      */
     private static final String SALT = "zzx";
-    /**
-     * 用户登录态
-     */
-    private static final String USER_LOGIN_STATE="userLoginState";
+
+
     @Override
     public long userRegister(String userAccount, String userPassword, String checkPassword) {
         //校验
@@ -95,32 +94,36 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         //账户不能重复
         QueryWrapper<User> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("userAccount", userAccount);
-        queryWrapper.eq("userPassword",encryptPassword);
-        User user=userMapper.selectOne(queryWrapper);
+        queryWrapper.eq("userPassword", encryptPassword);
+        User user = userMapper.selectOne(queryWrapper);
         //用户不存在
-        if (user==null){
+        if (user == null) {
             log.info("user login failed");
             return null;
         }
         //用户脱敏
-        User safetyUser=new User();
-        safetyUser.setId(user.getId());
-        safetyUser.setUsername(user.getUsername());
-        safetyUser.setUserAccount(user.getUserAccount());
-        safetyUser.setAvatarUrl(user.getAvatarUrl());
-        safetyUser.setPhone(user.getPhone());
-        safetyUser.setEmail(user.getEmail());
-        safetyUser.setUserStatus(user.getUserStatus());
-        safetyUser.setCreateTime(user.getCreateTime());
-        safetyUser.setUserRole(user.getUserRole());
-        safetyUser.setPlanetCode(user.getPlanetCode());
+        User safeUser = getSafeUser(user);
         //记录用户的登录态
         HttpSession session = request.getSession();
-        session.setAttribute(USER_LOGIN_STATE,safetyUser);
-        return safetyUser;
+        session.setAttribute(USER_LOGIN_STATE, safeUser);
+        return safeUser;
     }
 
-
+    @Override
+    public User getSafeUser(User originUser) {
+        User safetyUser = new User();
+        safetyUser.setId(originUser.getId());
+        safetyUser.setUsername(originUser.getUsername());
+        safetyUser.setUserAccount(originUser.getUserAccount());
+        safetyUser.setAvatarUrl(originUser.getAvatarUrl());
+        safetyUser.setPhone(originUser.getPhone());
+        safetyUser.setEmail(originUser.getEmail());
+        safetyUser.setUserStatus(originUser.getUserStatus());
+        safetyUser.setCreateTime(originUser.getCreateTime());
+        safetyUser.setUserRole(originUser.getUserRole());
+        safetyUser.setPlanetCode(originUser.getPlanetCode());
+        return safetyUser;
+    }
 }
 
 
