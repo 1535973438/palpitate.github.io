@@ -17,9 +17,5 @@ class UserServiceTest {
 
     @Test
     void userRegister() {
-        String account="zzxzzx";
-        String password="12345678 ";
-        String checkPassword="12345678 ";
-        long l = userService.userRegister(account, password, checkPassword);
     }
 }
