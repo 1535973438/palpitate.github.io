@@ -12,11 +12,6 @@ class UserCenterApplicationTests {
 
     @Test
     void contextLoads() {
-        String validPattern = "[`~!@#$%^&*()+=|{}':;',\\\\[\\\\].<>/?~！@#￥%……&*（）——+|{}【】‘；：”“’。，、？ ]";
-        Matcher matcher = Pattern.compile(validPattern).matcher("111222333");
-        if (matcher.find()) {
-            System.out.println(123);
-        }
     }
 
 }
