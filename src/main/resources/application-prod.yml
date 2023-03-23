@@ -1,8 +1,8 @@
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/yupi?serverTimezone=GMT%2B8v&serverTimezone=UTC&useSSL=false&rewriteBatchedStatements=true
+    url: jdbc:mysql://localhost:3306/zzx?serverTimezone=GMT%2B8v&serverTimezone=UTC&useSSL=false&rewriteBatchedStatements=true
     username: root
-    password: 800165
+    password: 123456
   session:
     timeout: 86400
